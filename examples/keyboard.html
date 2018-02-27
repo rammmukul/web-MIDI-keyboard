@@ -18,6 +18,9 @@
     <!-- utils -->
     <script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
     <script src="../js/util/dom_request_script.js" type="text/javascript"></script>
+    <!-- key maps -->
+    <script src="../js/westernKeyMap.js" type="text/javascript"></script>
+    <script src="../js/northIndianKeyMap.js" type="text/javascript"></script>
     <style>
         body {
             background: linear-gradient(45deg, slateblue, salmon);
@@ -88,6 +91,7 @@
 <body>
     <div id="keyboard"></div>
     <script type="text/javascript">
+        var keys = westernKeyMap // the MIDI notes
         window.onload = function () {
             MIDI.loadPlugin({
                 soundfontUrl: "./soundfont/",
@@ -96,115 +100,6 @@
                     console.log(state, progress);
                 },
                 onsuccess: function () {
-                    var keys = [{
-                            'C2': 36,
-                            'C1': 24
-                        },
-                        {
-                            'G2': 43,
-                            'G1': 31,
-                            'G0': 19
-                        },
-                        {
-                            'D2': 38,
-                            'D1': 26
-                        },
-                        {
-                            'A2': 45,
-                            'A1': 33,
-                            'A0': 21
-                        },
-                        {
-                            'E2': 40,
-                            'E1': 28
-                        },
-                        {
-                            'B2': 47,
-                            'B1': 35,
-                            'B0': 23
-                        },
-                        {
-                            'F#2': 42,
-                            'F#1': 30
-                        },
-                        {
-                            'C#3': 49,
-                            'C#2': 37,
-                            'C#1': 25
-                        },
-                        {
-                            'G#2': 44,
-                            'G#1': 32
-                        },
-                        {
-                            'D#3': 51,
-                            'D#2': 39,
-                            'D#1': 27
-                        },
-                        {
-                            'A#2': 46,
-                            'A#1': 34
-                        },
-                        {
-                            'F3': 53,
-                            'F2': 41,
-                            'F1': 29
-                        },
-                        {
-                            'C3': 48,
-                            'C2': 36
-                        },
-                        {
-                            'G3': 55,
-                            'G2': 43,
-                            'G1': 31
-                        },
-                        {
-                            'D3': 50,
-                            'D2': 38
-                        },
-                        {
-                            'A3': 57,
-                            'A2': 45,
-                            'A1': 33
-                        },
-                        {
-                            'E3': 52,
-                            'E2': 40
-                        },
-                        {
-                            'B3': 59,
-                            'B2': 47,
-                            'B1': 35
-                        },
-                        {
-                            'F#3': 54,
-                            'F#2': 42
-                        },
-                        {
-                            'C#4': 61,
-                            'C#3': 49,
-                            'C#2': 37
-                        },
-                        {
-                            'G#3': 56,
-                            'G#2': 44
-                        },
-                        {
-                            'D#4': 63,
-                            'D#3': 51,
-                            'D#2': 39
-                        },
-                        {
-                            'A#3': 58,
-                            'A#2': 46
-                        },
-                        {
-                            'F4': 65,
-                            'F3': 53,
-                            'F2': 41
-                        }
-                    ]; // the MIDI notes
                     var velocity = 127; // how hard the note hits
                     // play the note
                     MIDI.setVolume(0, 127);
@@ -223,7 +118,7 @@
                         for (const note in col) {
                             const key = document.createElement('div')
                             key.classList.add('key')
-                            if (note.includes('#')) {
+                            if (note.includes('#') || note.includes('॑')) {
                                 key.classList.add('black')
                             } else {
                                 key.classList.add('white')
@@ -240,12 +135,21 @@
                         }
                         keyboard.appendChild(column)
                     }
+                    let blank = document.querySelector('.blank')
+                    let keyMapToggle = document.createElement('button')
+                    keyMapToggle.addEventListener('click', changeKeyMap)
+                    keyMapToggle.innerText = 'KeyMap'
+                    blank.appendChild(keyMapToggle)
                 }
             });
         };
+
+        function changeKeyMap() {
+            document.getElementById('keyboard').innerHTML = ''
+            keys = keys === westernKeyMap ? northIndianKeyMap : westernKeyMap
+            window.onload()
+        }
     </script>
-
-
 </body>
 
 </html>
