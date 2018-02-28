@@ -5,7 +5,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <!-- css -->
-	<link href="./css/keyboard.css" rel="stylesheet" type="text/css" />
+    <link href="./css/keyboard.css" rel="stylesheet" type="text/css" />
     <!-- polyfill -->
     <script src="../inc/shim/Base64.js" type="text/javascript"></script>
     <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
@@ -43,6 +43,7 @@
 
                     const keyboard = document.getElementById('keyboard')
                     let insertBlank = true
+                    console.log(MIDI.keyToNote)
                     for (const col of keys) {
                         let column = document.createElement('div')
                         column.setAttribute('class', 'column')
@@ -52,18 +53,24 @@
                             column.appendChild(blank)
                         }
                         insertBlank = !insertBlank
-                        for (const note in col) {
+                        for (const note of col) {
                             const key = document.createElement('div')
                             key.classList.add('key')
-                            if (note.includes('#') || note.includes('॑')) {
+                            if (!MIDI.keyToNote[note]) {
+                                key.classList.remove('key')
+                                key.classList.add('disable')
+                                column.appendChild(key)
+                                continue
+                            }
+                            if (note.includes('b')) {
                                 key.classList.add('black')
                             } else {
                                 key.classList.add('white')
                             }
                             let play = () => {
-                                MIDI.noteOn(0, col[note], velocity, 0);
-                                MIDI.noteOff(0, col[note], 0.75);
-                                console.log(col[note])
+                                MIDI.noteOn(0, MIDI.keyToNote[note], velocity, 0);
+                                MIDI.noteOff(0, MIDI.keyToNote[note], 0.75);
+                                console.log(MIDI.keyToNote[note], note)
                             }
                             key.onclick = play
                             key.ontouchstart = play
@@ -72,22 +79,22 @@
                         }
                         keyboard.appendChild(column)
                     }
-                    let blank = document.querySelector('.blank')
-                    let keyMapToggle = document.createElement('button')
-                    keyMapToggle.addEventListener('click', changeKeyMap)
-                    keyMapToggle.innerText = 'KeyMap'
-                    keyMapToggle.style.display = 'block'
-                    keyMapToggle.style.height = '100%'
-                    blank.appendChild(keyMapToggle)
+                    // let blank = document.querySelector('.blank')
+                    // let keyMapToggle = document.createElement('button')
+                    // keyMapToggle.addEventListener('click', changeKeyMap)
+                    // keyMapToggle.innerText = 'KeyMap'
+                    // keyMapToggle.style.display = 'block'
+                    // keyMapToggle.style.height = '100%'
+                    // blank.appendChild(keyMapToggle)
                 }
             });
         };
 
-        function changeKeyMap() {
-            document.getElementById('keyboard').innerHTML = ''
-            keys = keys === westernKeyMap ? northIndianKeyMap : westernKeyMap
-            window.onload()
-        }
+        // function changeKeyMap() {
+        //     document.getElementById('keyboard').innerHTML = ''
+        //     keys = keys === westernKeyMap ? northIndianKeyMap : westernKeyMap
+        //     window.onload()
+        // }
     </script>
 </body>
 

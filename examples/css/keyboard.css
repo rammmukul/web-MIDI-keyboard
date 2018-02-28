@@ -13,7 +13,7 @@
         }
 
         .key {
-            height: 33vh;
+            height: 11.1111111111111111vh;
             width: 4.166666666666666666vw;
             text-align: center;
             box-sizing: border-box;
@@ -59,6 +59,13 @@
         }
 
         .blank {
-            height: 16.5vh;
+            height: 5.55555555555555555vh;
             width: 4.166666666666666666vw;
+        }
+        
+        .disable {
+            height: 11.1111111111111111vh;
+            width: 4.166666666666666666vw;
+            text-align: center;
+            box-sizing: border-box;
         }
