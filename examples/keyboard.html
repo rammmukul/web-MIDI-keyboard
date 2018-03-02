@@ -10,11 +10,11 @@
     <script src="../inc/shim/Base64.js" type="text/javascript"></script>
     <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
     <script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
-	<script src="../inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
-	<!-- jasmid package -->
-	<script src="../inc/jasmid/stream.js"></script>
-	<script src="../inc/jasmid/midifile.js"></script>
-	<script src="../inc/jasmid/replayer.js"></script>
+    <script src="../inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
+    <!-- jasmid package -->
+    <script src="../inc/jasmid/stream.js"></script>
+    <script src="../inc/jasmid/midifile.js"></script>
+    <script src="../inc/jasmid/replayer.js"></script>
     <!-- midi.js package -->
     <script src="../js/midi/audioDetect.js" type="text/javascript"></script>
     <script src="../js/midi/gm.js" type="text/javascript"></script>
@@ -22,7 +22,7 @@
     <script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
     <script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
     <script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
-	<script src="../js/midi/player.js" type="text/javascript"></script>
+    <script src="../js/midi/player.js" type="text/javascript"></script>
     <!-- utils -->
     <script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
     <script src="../js/util/dom_request_script.js" type="text/javascript"></script>
@@ -33,8 +33,11 @@
 <body>
     <div class="header">
         <input id="file" type="file">
-        <button id="play">Play</button>
-        <button id="pause">Pause</button>
+        <div id="control">
+            <button id="play">Play</button>
+            <button id="pause">Pause</button>
+            <input type="range" name="seek" id="seek" min="0" max="1000">
+        </div>
     </div>
     <div id="keyboard"></div>
     <script type="text/javascript">
@@ -48,7 +51,6 @@
                 },
                 onsuccess: function () {
                     var velocity = 127; // how hard the note hits
-                    // play the note
                     MIDI.setVolume(0, 127);
                     MIDI.Player.BPM = null
 
@@ -91,17 +93,16 @@
                         }
                         keyboard.appendChild(column)
                     }
-                    var unsetKeys = []
-                    MIDI.Player.addListener(function(data) {
-                        let key = MIDI.noteToKey[data.note]
-                        console.log(key)
-                        let keys = document.querySelectorAll('.'+key)
-                        for (key of keys) {
-                            key.classList.add('keyPlayed')
-                            unsetKeys.push(key)
+                    MIDI.Player.addListener(function (data) {
+                        let midiKey = MIDI.noteToKey[data.note]
+                        console.log(midiKey)
+                        let domKeys = document.querySelectorAll('.' + midiKey)
+                        for (let domKey of domKeys) {
+                            domKey.classList.add('keyPlayed')
+                            setTimeout(() => domKey.classList.remove('keyPlayed'), 400)
                         }
+                        seek.value = String((MIDI.Player.currentTime/MIDI.Player.endTime)*1000)
                     })
-                    setInterval(() => unsetKeys.forEach(k => k.classList.remove('keyPlayed')), 400)
 
                     fileIn = document.getElementById('file')
                     fileIn.onchange = () => {
@@ -112,15 +113,14 @@
 
                     document.getElementById('play').onclick = MIDI.Player.start
                     document.getElementById('pause').onclick = MIDI.Player.pause
+                    let seek = document.getElementById('seek')
+                    seek.onchange = () => {
+                        MIDI.Player.currentTime = MIDI.Player.endTime * (parseFloat(seek.value)/1000)
+                        MIDI.Player.start()
+                    }
                 }
             });
         };
-
-        // function changeKeyMap() {
-        //     document.getElementById('keyboard').innerHTML = ''
-        //     keys = keys === westernKeyMap ? northIndianKeyMap : westernKeyMap
-        //     window.onload()
-        // }
     </script>
 </body>
 

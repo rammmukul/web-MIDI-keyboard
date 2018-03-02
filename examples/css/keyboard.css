@@ -76,4 +76,19 @@
 
         .header {
             height: 10vh;
+            background-color: rgba(0, 0, 0, .8);
+            color: white;
+        }
+
+        #file {
+            height: 5vh;
+        }
+
+        #control {
+            margin-top: 1vh;
+            align-items: center;
+        }
+
+        #seek{
+            width: 80vw;
         }
