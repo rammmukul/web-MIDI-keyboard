@@ -13,7 +13,7 @@
         }
 
         .key {
-            height: 11.1111111111111111vh;
+            height: 10vh;
             width: 4.166666666666666666vw;
             text-align: center;
             box-sizing: border-box;
@@ -21,6 +21,11 @@
         }
 
         .key:active {
+            -webkit-animation: scale-down-center 0.4s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+            animation: scale-down-center 0.4s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
+        }
+
+        .keyPlayed {
             -webkit-animation: scale-down-center 0.4s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
             animation: scale-down-center 0.4s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
         }
@@ -47,7 +52,6 @@
             }
         }
 
-
         .black {
             background-color: rgba(0, 0, 0, .7);
             color: white;
@@ -64,8 +68,12 @@
         }
         
         .disable {
-            height: 11.1111111111111111vh;
+            height: 10vh;
             width: 4.166666666666666666vw;
             text-align: center;
             box-sizing: border-box;
+        }
+
+        .header {
+            height: 10vh;
         }

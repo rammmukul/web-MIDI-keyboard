@@ -10,6 +10,11 @@
     <script src="../inc/shim/Base64.js" type="text/javascript"></script>
     <script src="../inc/shim/Base64binary.js" type="text/javascript"></script>
     <script src="../inc/shim/WebAudioAPI.js" type="text/javascript"></script>
+	<script src="../inc/shim/WebMIDIAPI.js" type="text/javascript"></script>
+	<!-- jasmid package -->
+	<script src="../inc/jasmid/stream.js"></script>
+	<script src="../inc/jasmid/midifile.js"></script>
+	<script src="../inc/jasmid/replayer.js"></script>
     <!-- midi.js package -->
     <script src="../js/midi/audioDetect.js" type="text/javascript"></script>
     <script src="../js/midi/gm.js" type="text/javascript"></script>
@@ -17,15 +22,20 @@
     <script src="../js/midi/plugin.audiotag.js" type="text/javascript"></script>
     <script src="../js/midi/plugin.webaudio.js" type="text/javascript"></script>
     <script src="../js/midi/plugin.webmidi.js" type="text/javascript"></script>
+	<script src="../js/midi/player.js" type="text/javascript"></script>
     <!-- utils -->
     <script src="../js/util/dom_request_xhr.js" type="text/javascript"></script>
     <script src="../js/util/dom_request_script.js" type="text/javascript"></script>
     <!-- key maps -->
     <script src="../js/keyMaps/westernKeyMap.js" type="text/javascript"></script>
-    <script src="../js/keyMaps/northIndianKeyMap.js" type="text/javascript"></script>
 </head>
 
 <body>
+    <div class="header">
+        <input id="file" type="file">
+        <button id="play">Play</button>
+        <button id="pause">Pause</button>
+    </div>
     <div id="keyboard"></div>
     <script type="text/javascript">
         var keys = westernKeyMap // the MIDI notes
@@ -40,6 +50,7 @@
                     var velocity = 127; // how hard the note hits
                     // play the note
                     MIDI.setVolume(0, 127);
+                    MIDI.Player.BPM = null
 
                     const keyboard = document.getElementById('keyboard')
                     let insertBlank = true
@@ -67,6 +78,7 @@
                             } else {
                                 key.classList.add('white')
                             }
+                            key.classList.add(note)
                             let play = () => {
                                 MIDI.noteOn(0, MIDI.keyToNote[note], velocity, 0);
                                 MIDI.noteOff(0, MIDI.keyToNote[note], 0.75);
@@ -79,13 +91,27 @@
                         }
                         keyboard.appendChild(column)
                     }
-                    // let blank = document.querySelector('.blank')
-                    // let keyMapToggle = document.createElement('button')
-                    // keyMapToggle.addEventListener('click', changeKeyMap)
-                    // keyMapToggle.innerText = 'KeyMap'
-                    // keyMapToggle.style.display = 'block'
-                    // keyMapToggle.style.height = '100%'
-                    // blank.appendChild(keyMapToggle)
+                    var unsetKeys = []
+                    MIDI.Player.addListener(function(data) {
+                        let key = MIDI.noteToKey[data.note]
+                        console.log(key)
+                        let keys = document.querySelectorAll('.'+key)
+                        for (key of keys) {
+                            key.classList.add('keyPlayed')
+                            unsetKeys.push(key)
+                        }
+                    })
+                    setInterval(() => unsetKeys.forEach(k => k.classList.remove('keyPlayed')), 400)
+
+                    fileIn = document.getElementById('file')
+                    fileIn.onchange = () => {
+                        reader = new FileReader()
+                        reader.onload = () => MIDI.Player.loadFile(reader.result, MIDI.Player.start)
+                        reader.readAsDataURL(fileIn.files[0])
+                    }
+
+                    document.getElementById('play').onclick = MIDI.Player.start
+                    document.getElementById('pause').onclick = MIDI.Player.pause
                 }
             });
         };
