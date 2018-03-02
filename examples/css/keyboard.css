@@ -101,3 +101,35 @@
         #seek{
             width: calc(100% - 11em);
         }
+
+        #loading {
+            margin: 40vh 40vw;
+            align-self: center;
+            color: white;
+            font-size: 10vh;
+            display: block;
+            animation: load .5s ease-in-out infinite alternate;
+            -webkit-animation: load .5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes load {
+            0% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+            100% {
+                -webkit-transform: scale(.5);
+                transform: scale(.5);
+            }
+        }
+        
+        @-webkit-keyframes load {
+            0% {
+                -webkit-transform: scale(1);
+                transform: scale(1);
+            }
+            100% {
+                -webkit-transform: scale(.5);
+                transform: scale(.5);
+            }
+        }
