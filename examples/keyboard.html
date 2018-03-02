@@ -36,7 +36,7 @@
         <div id="control">
             <button id="play">Play</button>
             <button id="pause">Pause</button>
-            <input type="range" name="seek" id="seek" min="0" max="1000">
+            <input type="range" name="seek" id="seek" min="0" max="100" step=".1">
         </div>
     </div>
     <div id="keyboard"></div>
@@ -101,7 +101,7 @@
                             domKey.classList.add('keyPlayed')
                             setTimeout(() => domKey.classList.remove('keyPlayed'), 400)
                         }
-                        seek.value = String((MIDI.Player.currentTime/MIDI.Player.endTime)*1000)
+                        seek.value = String((MIDI.Player.currentTime/MIDI.Player.endTime)*100)
                     })
 
                     fileIn = document.getElementById('file')
@@ -115,7 +115,7 @@
                     document.getElementById('pause').onclick = MIDI.Player.pause
                     let seek = document.getElementById('seek')
                     seek.onchange = () => {
-                        MIDI.Player.currentTime = MIDI.Player.endTime * (parseFloat(seek.value)/1000)
+                        MIDI.Player.currentTime = MIDI.Player.endTime * (parseFloat(seek.value)/100)
                         MIDI.Player.start()
                     }
                 }

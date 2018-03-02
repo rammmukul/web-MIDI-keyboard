@@ -82,6 +82,7 @@
 
         #file {
             height: 5vh;
+            width: 100%;
         }
 
         #control {
@@ -89,6 +90,14 @@
             align-items: center;
         }
 
+        #play {
+            width: 4em;
+        }
+
+        #pause {
+            width: 4em;
+        }
+
         #seek{
-            width: 80vw;
+            width: calc(100% - 11em);
         }
